@@ -1,32 +1,29 @@
-package test12;
+package Day1;
 
 public class Mobile {
-
-	public Mobile(long id, String model, float price, byte noOfSims, String hasCamera) {
-		super();
-		this.id = id;
-		this.model = model;
-		this.price = price;
-		this.noOfSims = noOfSims;
-		this.hasCamera = hasCamera;
-	}
-
-	private long id;
+	private int id;
 	private String model;
-	private float price;
-	private byte noOfSims;
-	private String hasCamera;
+	private int price;
+	private String date;
 
 	public Mobile() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public long getId() {
+	public Mobile(int id, String model, int price, String date) {
+		super();
+		this.id = id;
+		this.model = model;
+		this.price = price;
+		this.date = date;
+	}
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -38,27 +35,20 @@ public class Mobile {
 		this.model = model;
 	}
 
-	public float getPrice() {
+	public int getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 
-	public byte getNoOfSims() {
-		return noOfSims;
+	public String getDate() {
+		return date;
 	}
 
-	public void setNoOfSims(byte noOfSims) {
-		this.noOfSims = noOfSims;
+	public void setDate(String date) {
+		this.date = date;
 	}
 
-	public String getHasCamera() {
-		return hasCamera;
-	}
-
-	public void setHasCamera(String hasCamera) {
-		this.hasCamera = hasCamera;
-	}
 }
