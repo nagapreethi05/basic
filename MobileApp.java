@@ -1,189 +1,186 @@
-package test12;
+package Day1;
 
+/*Write a program to implement menu driven program for mobile store with the following attributes:
+Id, Model, Price, DateOfManufacture
+1. Add Mobile details to the system and display all Mobile details present in system
+2. Sort all the mobiles based on Model and display the details
+3. Update Price for given mobile id and display the details
+4. Delete mobile details for given mobile id
+5. Exit
+Note : Model will be unique
+*/
+/*
+ * ask mobile id ,model ,price,date of manufacture and store them into system
+ * display all mobile details
+ *sort all moblie details based on model
+ *	//display them
+ *update price for given mobile id
+ * //display them 
+ *ask user mobile id and delete mobile details
+ *
+ */
 import java.util.Scanner;
 
 public class MobileApp {
 	static Scanner sc = new Scanner(System.in);
-	static byte size;
 
 	public static void main(String[] args) {
-		Mobile mobile[] = null;
+
+		Mobile[] mobileObj = new Mobile[10];
+		// menu
 		boolean flag = true;
 		do {
-			displayMenu();
+			displaymenu();
 			int choice = 0;
-			System.out.println("enter choice");
+			System.out.println("enter your choice");
 			choice = sc.nextInt();
 			switch (choice) {
 			case 1:
-				System.out.println("enter no of mobiles");
-				size = sc.nextByte();
-				mobile = createMobile(size);
-				displayMobile(mobile);
+				int noOfMobiles = 0;
+				System.out.println("enter number of mobiles you want to add");
+				noOfMobiles = sc.nextInt();
+				// ask user id,model,price,date of manufracture
+				mobileObj = addMobiles(noOfMobiles);
+				displayMobileDetails(mobileObj);
 				break;
 			case 2:
-				System.out.println("sort by model");
-				sortByModel(mobile);
-				displayMobile(mobile);
+				// sort and display
+				System.out.println("sorted based on mobile model ");
+				sortOnModel(mobileObj);
+				displayMobileDetails(mobileObj);
 				break;
 			case 3:
-				System.out.println("");
-				System.out.println("please enter the price to search");
-				float newPrice = sc.nextFloat();
-				mobile = sortMobile(mobile);
-				boolean found = searchMobile(newPrice, mobile);
-				if (found)
-					System.out.println("price found");
-				else
-					System.out.println("price not found");
-
+				// update price based on mobile id
+				System.out.println("enter mobile id to update the price");
+				int newId = sc.nextInt();
+				// search whether entered mobileId is correct or not
+				boolean found = searchForMobileId(newId, mobileObj);
+				if (found) {
+					System.out.println("id found");
+					// ask for price
+					System.out.println("enter the new price");
+					int newPrice = sc.nextInt();
+					updatePrice(newId, newPrice, mobileObj);
+				} else {
+					System.out.println("enter correct id");
+				}
+				displayMobileDetails(mobileObj);
 				break;
 			case 4:
-				System.out.println("enter the id to update the price");
-				int newID = sc.nextInt();
-				System.out.println("enter the new price to be updated");
-				float newPrice1 = sc.nextFloat();
-				updateThePrice(newID, mobile, newPrice1);
-				displayMobile(mobile);
+				// delete mobile details
+				// ask user mobile id which you want to delete
+				System.out.println("enter mobile id to delete the details of mobile");
+				int newDeleteId = sc.nextInt();
+				deleteMobileDetails(newDeleteId, mobileObj);
+				// after deleting display
+				displayMDetailsAfterDelete(mobileObj);
 				break;
 			case 5:
-				System.out.println("exit");
+				System.out.println("Thank you");
 				flag = false;
 				break;
-
-
+			default:
+				System.out.println("enter valid choice");
+				break;
 			}
 		} while (flag);
 	}
-
-	private static boolean searchMobile(float newPrice, Mobile[] mobile) {
+	private static void displayMDetailsAfterDelete(Mobile[] mobileObj) {
 		// TODO Auto-generated method stub
-		// binary search
-		int middle = 0, first = 0, last = mobile.length - 1;
-		middle = (first + last) / 2;
+		for (int i = 0; i < mobileObj.length - 1; i++) {
+			if (mobileObj[i] != null) {
+				System.out.println("mobile details: id" + mobileObj[i].getId() + " model:" + mobileObj[i].getModel()
+						+ " price:" + mobileObj[i].getPrice() + " date of manufracture:" + mobileObj[i].getDate());
+			}
+		}
+	}
+
+	private static void deleteMobileDetails(int newDeleteId, Mobile[] mobileObj) {
+		// TODO Auto-generated method stub
+				for (int i = 0; i < mobileObj.length; i++) {
+			if (mobileObj[i] != null && mobileObj[i].getId() == newDeleteId) {
+				mobileObj[i] = null;
+			}
+		}
 		
-		while (first <= last) {
-			if (mobile[middle].getPrice() <= newPrice ){
-				System.out.println("mobile details: id" + mobile[middle].getId() + " " + "no of sims:"
-						+ mobile[middle].getNoOfSims() + " " + "model:" + mobile[middle].getModel() + "  " + "price:"
-						+ mobile[middle].getPrice() + "  " + "has cam:" + mobile[middle].getHasCamera());
-				return true;
-			} else if (mobile[middle].getPrice() < newPrice) {
-				first = middle + 1;
-			} else {
-				last = middle - 1;
-			}
-			middle = (first + last) / 2;
-		}
-
-		return false;
+		System.out.println("successfully deteleted");
 	}
 
-	private static Mobile[] sortMobile(Mobile[] mobile) {
+	private static void updatePrice(int newId, int newPrice, Mobile[] mobileObj) {
 		// TODO Auto-generated method stub
-		int i, j;
-		float price;
-		Mobile c;
-		// insertion sort
-		for (i = 1; i < mobile.length; i++) {
-			price = mobile[i].getPrice();
-			c = mobile[i];
-			j = i - 1;
-			while (j >= 0 && mobile[j].getId() > price) {
-				mobile[j + 1] = mobile[j];
-				j = j - 1;
+		for (int i = 0; i < mobileObj.length; i++) {
+			if (newId == mobileObj[i].getId()) {
+				mobileObj[i].setPrice(newPrice);
+
 			}
-			mobile[j + 1] = c;
 		}
-		return mobile;
 	}
 
-	private static boolean updateThePrice(int newID, Mobile[] mobile, float newPrice) {
-		for (int i = 0; i < mobile.length; i++) {
-			if (newID == mobile[i].getId()) {
-				mobile[i].setPrice(newPrice);
+	private static boolean searchForMobileId(int newId, Mobile[] mobileObj) {
+		// TODO Auto-generated method stub
+
+		for (int i = 0; i < mobileObj.length; i++) {
+			if (newId == mobileObj[i].getId()) {
 				return true;
 			}
 		}
 		return false;
-		// TODO Auto-generated method stub
-
 	}
 
-	private static Mobile[] sortByModel(Mobile[] mobile) {
+	private static Mobile[] sortOnModel(Mobile[] mobileObj) {
+		// TODO Auto-generated method stub
 		// bubble sort
 		Mobile temp = new Mobile();
-		for (int i = 0; i < mobile.length - 1; i++) {
-			for (int j = 0; j < mobile.length - i - 1; j++) {
-				if (mobile[j].getModel().compareTo(mobile[j + 1].getModel()) > 0) {
-					temp = mobile[j];
-					mobile[j] = mobile[j + 1];
-					mobile[j + 1] = temp;
+		for (int i = 0; i < mobileObj.length - 1; i++) {
+			for (int j = 0; j < mobileObj.length - i - 1; j++) {
+				if (mobileObj[j].getModel().compareTo(mobileObj[j + 1].getModel()) > 0) {
+					temp = mobileObj[j];
+					mobileObj[j] = mobileObj[j + 1];
+					mobileObj[j + 1] = temp;
 				}
 
 			}
 		}
-		return mobile;
-		// TODO Auto-generated method stub
-
+		return mobileObj;
 	}
 
-	private static void displayMobile(Mobile[] mobile) {
+	private static void displayMobileDetails(Mobile[] mobileObj) {
+
 		// TODO Auto-generated method stub
-		for (int i = 0; i < mobile.length; i++) {
-			System.out.println("mobile details: id:" + mobile[i].getId() + " " + "mobile model:" + mobile[i].getModel()
-					+ " " + "price:" + mobile[i].getPrice() + " " + "no of sims:" + mobile[i].getNoOfSims() + " "
-					+ "has camera:" + mobile[i].getHasCamera());
+		for (int i = 0; i < mobileObj.length; i++) {
+
+			System.out.println("mobile details: id" + mobileObj[i].getId() + " model:" + mobileObj[i].getModel()
+					+ " price:" + mobileObj[i].getPrice() + " date of manufracture:" + mobileObj[i].getDate());
 
 		}
 	}
 
-	private static Mobile[] createMobile(byte size) {
-		Mobile mobileArray[] = new Mobile[size];
-		int[] dupid = new int[size];
-		int index = 0;
-		for (int i = 0; i < mobileArray.length; i++) {
-			System.out.println("enter the " + (i + 1) + "mobile details");
-			System.out.println("enter the mobile id");
+	private static Mobile[] addMobiles(int noOfMobiles) {
+		// TODO Auto-generated method stub
+		// create mobiles array
+		Mobile arr[] = new Mobile[noOfMobiles];
+		// ask for mobile details
+		for (int i = 0; i < noOfMobiles; i++) {
+			System.out.println("enter mobile id");
 			int id = sc.nextInt();
-			dupid[index] = id;
-			for (int j = 0; j < index; j++) {
-				if (id == dupid[j]) {
-					System.out.println("enter unique id");
-					id = sc.nextInt();
-					j = -1;
-				}
-			}
-			index++;
-			System.out.println("enter the mobile model");
-			sc.nextLine();
-			String model = sc.nextLine();
-			System.out.println("enter the mobile price");
-			float price = sc.nextFloat();
-			System.out.println("enter no of sims");
-			byte noOfSims = sc.nextByte();
-			sc.nextLine();
-			System.out.println("has camera yes or no");
-			String hasCamera = sc.nextLine();
-
-			mobileArray[i] = new Mobile(id, model, price, noOfSims, hasCamera);
+			System.out.println("enter model");
+			String model = sc.next();
+			System.out.println("enter price");
+			int price = sc.nextInt();
+			System.out.println("enter date of manufracture");
+			String date = sc.next();
+			arr[i] = new Mobile(id, model, price, date);
 		}
-		return mobileArray;
-
+		return arr;
 	}
-	// TODO Auto-generated method stub
 
-	private static void displayMenu() {
+	private static void displaymenu() {
 		// TODO Auto-generated method stub
-		System.out.println("========================================================");
-		System.out.println("press 1 To Add details of a mobile.");
-		System.out.println("press 2 sort the mobile on base of model ");
-		System.out.println(
-				"press 3 display mobile details whose price is less than  or equal to given price with camera");
-		System.out.println("press 4 update the price of the mobile using mobile id.");
-		System.out.println("press 5 Exit.");
-		System.out.println("========================================================");
-
+		System.out.println("1.add mobile details and display mobile details");
+		System.out.println("2.sort all mobiles based on model");
+		System.out.println("3.update price for a mobile");
+		System.out.println("4.delete mobile details");
+		System.out.println("5.Exit");
 	}
 
 }
