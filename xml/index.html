@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #customers {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      #customers td,
+      #customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+
+      #customers tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      #customers tr:hover {
+        background-color: #ddd;
+      }
+
+      #customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04aa6d;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <table id="customers">
+        <thead>
+          <tr>
+            <th>Food Name</th>
+            <th>Food Price</th>
+            <th>Food Calories</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        let response = await fetch("food.xml");
+        let xmlString = await response.text();
+        console.log(xmlString);
+        let parser = new DOMParser();
+        let xml = parser.parseFromString(xmlString, "application/xml");
+        console.log(xml);
+        let foods = xml.getElementsByTagName("food");
+        let tbody = document.getElementById("table-body");
+        for (let i = 0; i < foods.length; i++) {
+          let name = foods[i].querySelector("name").innerHTML;
+          let price = foods[i].querySelector("price").innerHTML;
+          let cals = foods[i].querySelector("calories").innerHTML;
+          let row = `<tr>
+              <td>${name}</td>
+              <td>${price}</td>
+              <td>${cals}</td>
+              </tr>`;
+          tbody.innerHTML += row;
+        }
+      });
+    </script>
+  </body>
+</html>
